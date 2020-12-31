@@ -5,3 +5,10 @@ matplotlib
 overpy
 pandas
 shapely
+prefect
+mapboxcli
+earthengine-api
+tensorflow
+folium
+tqdm
+loguru
