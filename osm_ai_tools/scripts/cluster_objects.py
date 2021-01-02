@@ -1,3 +1,4 @@
+import click
 import pandas as pd
 from sklearn.cluster import AgglomerativeClustering
 
@@ -19,12 +20,16 @@ def cluster_objects(df):
     return df, cluster_df
 
 
-def run_clustering():
-    df = pd.read_csv("data/object_location_data.csv")
+def run_clustering(input_objects, output_clusters, output_objects):
+    df = pd.read_csv(input_objects)
     df_with_cluster_id, cluster_df = cluster_objects(df)
-    df_with_cluster_id.to_csv("data/object_location_data_clustered.csv", index=False, float_format="%.5f")
-    cluster_df.to_csv("data/clusters.csv", float_format="%.5f")
+    df_with_cluster_id.to_csv(output_objects, index=False, float_format="%.5f")
+    cluster_df.to_csv(output_clusters, float_format="%.5f")
 
 
-if __name__ == "__main__":
-    run_clustering()
+@click.command()
+@click.option('--input-objects', help='CSV of object locations and IDs', required=True, type=str)
+@click.option('--output-clusters', help='Path to output cluster CSV', required=True, type=str)
+@click.option('--output-objects', help='Path to output object CSV', required=True, type=str)
+def cli(input_objects, output_clusters, output_objects):
+    run_clustering(input_objects, output_clusters, output_objects)

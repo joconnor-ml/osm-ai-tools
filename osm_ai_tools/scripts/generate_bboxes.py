@@ -1,7 +1,9 @@
 import math
 
+import click
 import pandas as pd
 
+from . import download_images
 
 
 def getPointLatLng(x, y, lat, lng, size_x, size_y, zoom):
@@ -20,7 +22,8 @@ image_size = 0.01
 def get_patch(row, padding=0.06):
     ne = getPointLatLng(row.size_x, 0, row.center_lat_image, row.center_lon_image, row.size_x, row.size_y, row.zoom)
     nw = getPointLatLng(0, 0, row.center_lat_image, row.center_lon_image, row.size_x, row.size_y, row.zoom)
-    se = getPointLatLng(row.size_x, row.size_y, row.center_lat_image, row.center_lon_image, row.size_x, row.size_y, row.zoom)
+    se = getPointLatLng(row.size_x, row.size_y, row.center_lat_image, row.center_lon_image, row.size_x, row.size_y,
+                        row.zoom)
     size_lat = ne[0] - se[0]
     size_lon = ne[1] - nw[1]
     return pd.Series(dict(
@@ -32,13 +35,17 @@ def get_patch(row, padding=0.06):
     ))
 
 
-image_df = pd.read_csv("data/images.csv")
-object_df = pd.read_csv("data/object_location_data_clustered.csv").merge(
-    image_df, how="left", on="cluster_id", suffixes=("", "_image")
-).merge(image_df, on="cluster_id")
+@click.command()
+@click.option('--input-csv', help='CSV of image location, zoom and size information', required=True, type=str)
+@click.option('--output-csv', help='Path to output bbox CSV', required=True, type=str)
+def cli(input_csv, output_csv):
+    image_df = pd.read_csv(input_csv)
+    image_df["image_id"] = image_df.apply(download_images.get_image_id, axis=1)
+    object_df = pd.read_csv("data/object_location_data_clustered.csv").merge(
+        image_df, how="inner", on="cluster_id", suffixes=("", "_image")
+    )
 
-
-bboxes = object_df.apply(get_patch, axis=1)
-bboxes["image_id"] = object_df["image_id"]
-bboxes["osm_id"] = bboxes["osm_id"].astype(int)
-bboxes.to_csv("data/bboxes.csv")
+    bboxes = object_df.apply(get_patch, axis=1)
+    bboxes["osm_id"] = bboxes["osm_id"].astype(int)
+    bboxes["image_id"] = object_df["image_id"]
+    bboxes.to_csv(output_csv, index=False)
