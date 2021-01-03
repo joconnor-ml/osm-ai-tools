@@ -36,3 +36,4 @@ dataset for pretraining. See [train_resisc45_resnet.ipynb](notebooks/train_resis
 
 - [ ] Tag Validation API
 - [ ] Object Detection
+- [ ] Add TPU Compatibility
