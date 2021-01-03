@@ -16,6 +16,8 @@ pip install -e .  # for 'click' command line tools
 
 ## Data Pipeline
 
+**Note: A Mapbox API token is required to download images. Simplest is using the MAPBOX_ACCESS_TOKEN environment variable.**
+
 Given a set of OSM tags that define a type of object, we can build a training set of images (Mapbox)
 and bounding boxes (OSM) that can be used to train object detection and classification models.
 
