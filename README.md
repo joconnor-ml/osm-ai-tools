@@ -1,7 +1,18 @@
 # OSM AI Tools
 
 Tools for validating and detecting arbitrary objects defined by OSM tags using
-high-resolution Mapbox imagery.
+high-resolution Mapbox imagery. 
+
+# Installation
+
+```shell
+git clone git@github.com:joconnor-ml/osm-ai-tools.git
+cd osm-ai-tools
+virtualenv --python=python3.8 venv
+venv/bin/activate
+pip install -r requirements.txt
+pip install -e .  # for 'click' command line tools
+```
 
 ## Data Pipeline
 
