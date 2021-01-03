@@ -3,29 +3,36 @@
 Tools for validating and detecting arbitrary objects defined by OSM tags using
 high-resolution Mapbox imagery.
 
-## Object Detection
+## Data Pipeline
 
 Given a set of OSM tags that define a type of object, we can build a training set of images (Mapbox)
-and bounding boxes (OSM) that can be used to train an object detection model. This
-model can then be applied to new areas to search for new, untagged objects.
+and bounding boxes (OSM) that can be used to train object detection and classification models.
+
+See e.g. [examples/cooling_towers/data_pipeline.sh](examples/cooling_towers/data_pipeline.sh)
 
 - `generate_object_location_data` pulls location data using Overpass
 - `cluster_objects` can be used to group objects into colocated clusters
 to reduce the number of image requests needed.
-- `download_images` pulls one image per cluster
+- `download_images` pulls one image per cluster.
+- `generate_bboxes` generates normalised bounding boxes for each object, linking objects and images.
 
-We then make use of the Tensorflow Object Detection API to build an object detector.
+## Image Classification for Tag Validation
 
-## Tag Validation (Classification)
+Raw OSM annotations are often inconsistent, outdated or wrong. In [mistag_classification.ipynb](example/cooling_towers/mistag_classification.ipynb)
+we use a cross-validated image classification pipeline to generate a list of likely
+mistagged objects. Objects with a large discrepancy between their out-of-sample
+class prediction and their label are likely to be mislabelled.
 
-Raw OSM annotations are often inconsistent, outdated or wrong.
-This can lead to difficulty in training an object detection model.
+- Generate positives from images and bounding boxes.
+- Generate negatives from random crops. This method relies on images being significantly larger than images to keep mislabelled negatives to a minimum.
+- Cross-validation, finetuned RESISC-45 ResNet-50.
+- Hand-label candidate mistags (objects with pred_class != true_class)
+- Prune mistags from data, retrain model and save.
 
-Here we sample images from the image clusters defined above to build a
-classification model. Applying cross-validation allows us to detect the
-annotations that the model finds most surprising, which are likely to be
-mistakes. This list can be used to correct the upstream OSM database, or
-to prune mislabelled objects from a local image detection dataset.
+We boost the performance of classification models using the RESISC-45 aerial imagery
+dataset for pretraining. See [train_resisc45_resnet.ipynb](notebooks/train_resisc45_resnet.ipynb).
 
-For classification models, we make use of the RESISC-45 aerial imagery dataset
-and Google AI's Big Transfer models and methodology.
+# TO DO
+
+- [ ] Tag Validation API
+- [ ] Object Detection
