@@ -36,15 +36,16 @@ def get_patch(row, padding=0.06):
 
 
 @click.command()
-@click.option('--input-csv', help='CSV of image location, zoom and size information', required=True, type=str)
+@click.option('--input-image-csv', help='CSV of image location, zoom and size information', required=True, type=str)
+@click.option('--input-object-csv', help='CSV of object location data: should be called object_location_data_clustered.csv', required=True, type=str)
 @click.option('--output-csv', help='Path to output bbox CSV', required=True, type=str)
-def cli(input_csv, output_csv):
-    image_df = pd.read_csv(input_csv)
+def cli(input_image_csv, input_object_csv, output_csv):
+    image_df = pd.read_csv(input_image_csv)
     image_df["image_id"] = image_df.apply(
         lambda row: download_images.get_image_id(row.center_lat, row.center_lon, row.zoom, row.size_x, row.size_y),
         axis=1
     )
-    object_df = pd.read_csv("data/object_location_data_clustered.csv").merge(
+    object_df = pd.read_csv(input_object_csv).merge(
         image_df, how="inner", on="cluster_id", suffixes=("", "_image")
     )
 
