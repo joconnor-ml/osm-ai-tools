@@ -14,5 +14,6 @@ setup(
         generate_bboxes=osm_ai_tools.scripts.generate_bboxes:cli
         generate_object_location_data=osm_ai_tools.scripts.generate_object_location_data:cli
         cluster_objects=osm_ai_tools.scripts.cluster_objects:cli
+        generate_tfrecords=osm_ai_tools.scripts.generate_tfrecords:cli
     ''',
 )
