@@ -8,8 +8,8 @@ def get_span(grp):
                abs(grp["center_lon"].max() - grp["center_lon"].min()))
 
 
-def cluster_objects(df):
-    agg_clust = AgglomerativeClustering(n_clusters=None, distance_threshold=0.008)  # euclidean distance in lat/lon
+def cluster_objects(df, max_distance):
+    agg_clust = AgglomerativeClustering(n_clusters=None, distance_threshold=max_distance)  # euclidean distance in lat/lon
     df["cluster_id"] = agg_clust.fit_predict(df[["center_lat", "center_lon"]])
     cluster_span = df.groupby("cluster_id").apply(get_span).sort_values()
     cluster_size = df.groupby("cluster_id").size()
@@ -20,9 +20,9 @@ def cluster_objects(df):
     return df, cluster_df
 
 
-def run_clustering(input_objects, output_clusters, output_objects):
+def run_clustering(input_objects, output_clusters, output_objects, max_distance):
     df = pd.read_csv(input_objects)
-    df_with_cluster_id, cluster_df = cluster_objects(df)
+    df_with_cluster_id, cluster_df = cluster_objects(df, max_distance)
     df_with_cluster_id.to_csv(output_objects, index=False, float_format="%.5f")
     cluster_df.to_csv(output_clusters, float_format="%.5f")
 
@@ -31,5 +31,6 @@ def run_clustering(input_objects, output_clusters, output_objects):
 @click.option('--input-objects', help='CSV of object locations and IDs', required=True, type=str)
 @click.option('--output-clusters', help='Path to output cluster CSV', required=True, type=str)
 @click.option('--output-objects', help='Path to output object CSV', required=True, type=str)
-def cli(input_objects, output_clusters, output_objects):
-    run_clustering(input_objects, output_clusters, output_objects)
+@click.option('--max-distance', help='Max distance in lat/lon space', default=0.008, type=float)
+def cli(input_objects, output_clusters, output_objects, max_distance):
+    run_clustering(input_objects, output_clusters, output_objects, max_distance)
