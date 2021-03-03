@@ -25,7 +25,7 @@ def get_geometry_info(nodes: List[overpy.Node]):
         "center_lon": (min(lons) + max(lons)) / 2,
     }
 
-def query_objects(query_list: List[ObjectQuery] = None):
+def query_objects(query_list: List[ObjectQuery] = None, include_tags: bool=False):
     api = overpy.Overpass()
 
     out = []
@@ -39,7 +39,10 @@ def query_objects(query_list: List[ObjectQuery] = None):
         result = api.query(q)
         df = []
         for w in result.ways:
-            df.append(dict(osm_id=w.id, **get_geometry_info(w.get_nodes())))
+            out_dict = dict(osm_id=w.id, **get_geometry_info(w.get_nodes()))
+            if include_tags:
+                out_dict = {**out_dict, **w.tags}
+            df.append(out_dict)
         df = pd.DataFrame(df)
         df["object_class"] = query.object_class  # map to our object names
         out.append(df)
