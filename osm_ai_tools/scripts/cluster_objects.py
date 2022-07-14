@@ -1,4 +1,3 @@
-import click
 import pandas as pd
 from sklearn.cluster import AgglomerativeClustering
 
@@ -30,25 +29,8 @@ def cluster_objects(df, max_distance):
     return df, cluster_df
 
 
-def run_clustering(input_objects, output_clusters, output_objects, max_distance):
+def main(input_objects, output_clusters, output_objects, max_distance):
     df = pd.read_csv(input_objects)
     df_with_cluster_id, cluster_df = cluster_objects(df, max_distance)
     df_with_cluster_id.to_csv(output_objects, index=False, float_format="%.5f")
     cluster_df.to_csv(output_clusters, float_format="%.5f")
-
-
-@click.command()
-@click.option(
-    "--input-objects", help="CSV of object locations and IDs", required=True, type=str
-)
-@click.option(
-    "--output-clusters", help="Path to output cluster CSV", required=True, type=str
-)
-@click.option(
-    "--output-objects", help="Path to output object CSV", required=True, type=str
-)
-@click.option(
-    "--max-distance", help="Max distance in lat/lon space", default=0.008, type=float
-)
-def cli(input_objects, output_clusters, output_objects, max_distance):
-    run_clustering(input_objects, output_clusters, output_objects, max_distance)

@@ -1,7 +1,6 @@
 import os
 import subprocess as sp
 
-import click
 import pandas as pd
 from loguru import logger
 from tqdm import tqdm
@@ -35,7 +34,7 @@ def download_image(
     sp.check_call(call)  # throws if call fails
 
 
-def download_all_images(
+def main(
     location_file: str, image_dir: str, output_csv: str, image_size: int, zoom: int
 ) -> None:
     image_requests = pd.read_csv(location_file)
@@ -73,25 +72,3 @@ def download_all_images(
     num_failures = (image_requests["image_downloaded"] == False).sum()
     logger.info(f"{num_failures} images failed to download")
     image_requests.to_csv(output_csv, index=False, float_format="%.5f")
-
-
-@click.command()
-@click.option(
-    "--input-csv",
-    help="CSV of lat, lon, zoom specifying images to download",
-    required=True,
-    type=str,
-)
-@click.option("--image-dir", help="Path to output directory", required=True, type=str)
-@click.option(
-    "--output-csv",
-    help="Path to output CSV file containing image IDs",
-    required=True,
-    type=str,
-)
-@click.option(
-    "--image-size", help="image size in pixels, max=1280", default=1280, type=int
-)
-@click.option("--zoom", help="image zoom level", default=17, type=int)
-def cli(input_csv, image_dir, output_csv, image_size, zoom):
-    download_all_images(input_csv, image_dir, output_csv, image_size, zoom)

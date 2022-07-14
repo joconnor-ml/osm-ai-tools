@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import tensorflow as tf
-import click
 
 AUTO = tf.data.experimental.AUTOTUNE  # used in tf.data.Dataset API
 IMAGE_SIZE = 224
@@ -90,7 +89,7 @@ def to_tfrecord(img_bytes, label, bbox_id):
     return tf.train.Example(features=tf.train.Features(feature=feature))
 
 
-def generate_tfrecords(input_image_dir, input_bbox_csv, output_tfrecord_path):
+def main(input_image_dir, input_bbox_csv, output_tfrecord_path):
     patches = pd.read_csv(input_bbox_csv)
 
     images_and_bboxes = get_base_dataset(input_image_dir, patches)
@@ -129,21 +128,3 @@ def generate_tfrecords(input_image_dir, input_bbox_csv, output_tfrecord_path):
                 )
                 out_file.write(example.SerializeToString())
             print("Wrote file {} containing {} records".format(filename, shard_size))
-
-
-@click.command()
-@click.option("--input-image-dir", help="JSON config file", required=True, type=str)
-@click.option(
-    "--input-bbox-csv",
-    help="Path to output object location CSV",
-    required=True,
-    type=str,
-)
-@click.option(
-    "--output-tfrecord-path",
-    help="Path to output object location CSV",
-    required=True,
-    type=str,
-)
-def cli(input_image_dir, input_bbox_csv, output_tfrecord_path):
-    generate_tfrecords(input_image_dir, input_bbox_csv, output_tfrecord_path)

@@ -2,8 +2,6 @@ import json
 import os
 import subprocess
 
-import click
-
 from . import (
     generate_bboxes,
     generate_object_location_data,
@@ -28,11 +26,11 @@ def main(config_file):
     tfrecords_path = os.path.join(conf["data_dir"], "tfrecords")
 
     if "osm_tags" in conf:
-        generate_object_location_data.cli(
+        generate_object_location_data.main(
             query_config=conf, output_csv=raw_locations_path, include_tags=True
         )
     elif "custom_locations" in conf:
-        custom_location_data.cli(
+        custom_location_data.main(
             conf["custom_locations"],
             id_col="gems_plant_id",
             lat_col="lat",
@@ -45,24 +43,24 @@ def main(config_file):
         raise RuntimeError(
             "One of 'osm_tags' or 'custom_locations' required in config file."
         )
-    cluster_objects.cli(
+    cluster_objects.main(
         input_objects=raw_locations_path,
         output_clusters=clusters_path,
         output_objects=clustered_locations_path,
         max_distance=conf["cluster_size"],
     )
-    download_images.cli(
+    download_images.main(
         input_csv=clusters_path,
         image_dir=images_path,
         output_csv=image_metadata_path,
         zoom=conf["zoom"],
     )
-    generate_bboxes.cli(
+    generate_bboxes.main(
         input_image_csv=image_metadata_path,
         input_object_csv=clustered_locations_path,
         output_csv=bboxes_path,
     )
-    generate_tfrecords.cli(
+    generate_tfrecords.main(
         input_image_dir=images_path,
         input_bbox_csv=bboxes_path,
         output_tfrecord_path=tfrecords_path,
@@ -80,7 +78,10 @@ def main(config_file):
         )
 
 
-@click.command()
-@click.option("--config", help="JSON config file", required=True, type=str)
-def cli(config):
-    main(config)
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", type=str, help="Path to JSON config file")
+    args = parser.parse_args()
+    main(args.config)
