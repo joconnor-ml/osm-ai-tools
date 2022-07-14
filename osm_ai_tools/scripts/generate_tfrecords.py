@@ -1,10 +1,9 @@
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+from osm_ai_tools import config
 
 AUTO = tf.data.experimental.AUTOTUNE  # used in tf.data.Dataset API
-IMAGE_SIZE = 224
-SHARD_SIZE = 512
 
 
 def get_base_dataset(image_dir, patches):
@@ -38,7 +37,7 @@ def get_final_dataset(images_and_bboxes, bboxes_per_image):
             tf.expand_dims(img, axis=0),
             bboxes,
             box_indices=tf.zeros_like(bboxes[:, 0], dtype=tf.int32),
-            crop_size=[IMAGE_SIZE, IMAGE_SIZE],
+            crop_size=[config.image_size, config.image_size],
             method="bilinear",
             extrapolation_value=127,
             name=None,
@@ -52,6 +51,7 @@ def get_final_dataset(images_and_bboxes, bboxes_per_image):
         )
 
     # use random crops for "negatives" -- as long as image size >> object size, this should be OK
+    # TODO crop from edges of image to decrease number of false negatives
     def sample_negatives(img, boxes, cls):
         return {
             "image": tf.cast(
@@ -108,7 +108,7 @@ def main(input_image_dir, input_bbox_csv, output_tfrecord_path):
         )
         return image, label, bbox_id
 
-    ds = final_dataset.map(recompress_image).batch(SHARD_SIZE)
+    ds = final_dataset.map(recompress_image).batch(config.shard_size)
 
     print("Writing TFRecords")
     for shard, (image, label, bbox_id) in enumerate(ds):

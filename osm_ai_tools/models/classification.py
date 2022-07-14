@@ -1,6 +1,6 @@
 import tensorflow as tf
 
-from .scripts.download_images import download_image, get_image_id
+from osm_ai_tools.scripts.download_images import download_image, get_image_id
 
 
 def predict(model, lat, lon, zoom, size):

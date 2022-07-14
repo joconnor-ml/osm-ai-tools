@@ -1,6 +1,6 @@
 import json
 
-from osm_ai_tools import query_osm
+from osm_ai_tools.data import query_osm
 
 
 def main(query_config, output_csv, include_tags):
