@@ -27,11 +27,11 @@ def main(config_file):
     bboxes_path = os.path.join(conf["data_dir"], "bboxes.csv")
     tfrecords_path = os.path.join(conf["data_dir"], "tfrecords")
 
-    if conf["osm_tags"]:
+    if "osm_tags" in conf:
         generate_object_location_data.cli(
             query_config=conf, output_csv=raw_locations_path, include_tags=True
         )
-    elif conf["custom_locations"]:
+    elif "custom_locations" in conf:
         custom_location_data.cli(
             conf["custom_locations"],
             id_col="gems_plant_id",
@@ -40,6 +40,10 @@ def main(config_file):
             object_size=0.01,
             object_class="power_plant",
             output_csv=raw_locations_path,
+        )
+    else:
+        raise RuntimeError(
+            "One of 'osm_tags' or 'custom_locations' required in config file."
         )
     cluster_objects.cli(
         input_objects=raw_locations_path,
@@ -63,7 +67,7 @@ def main(config_file):
         input_bbox_csv=bboxes_path,
         output_tfrecord_path=tfrecords_path,
     )
-    if conf["gcs_bucket"]:
+    if "gcs_bucket" in conf:
         subprocess.call(
             [
                 "gsutil",
