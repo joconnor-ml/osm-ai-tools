@@ -15,7 +15,6 @@ from . import (
 def main(config_file):
     with open(config_file, "rt") as f:
         conf = json.load(f)
-    os.makedirs(conf["data_dir"], exist_ok=True)
     raw_locations_path = os.path.join(conf["data_dir"], "object_location_data.csv")
     clustered_locations_path = os.path.join(
         conf["data_dir"], "object_location_data_clustered.csv"
@@ -25,6 +24,10 @@ def main(config_file):
     image_metadata_path = os.path.join(conf["data_dir"], "images.csv")
     bboxes_path = os.path.join(conf["data_dir"], "bboxes.csv")
     tfrecords_path = os.path.join(conf["data_dir"], "tfrecords")
+
+    os.makedirs(conf["data_dir"], exist_ok=True)
+    os.makedirs(images_path, exist_ok=True)
+    os.makedirs(tfrecords_path, exist_ok=True)
 
     if "osm_tags" in conf:
         generate_object_location_data.main(
