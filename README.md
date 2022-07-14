@@ -11,7 +11,6 @@ cd osm-ai-tools
 virtualenv --python=python3.8 venv
 venv/bin/activate
 pip install -r requirements.txt
-pip install -e .  # for 'click' command line tools
 ```
 
 ## Data Pipeline

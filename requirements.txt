@@ -1,15 +1,9 @@
+-e .
 black
-descartes
-geopandas
-jupyter
-matplotlib
 overpy
 pandas
-shapely
-prefect
 mapboxcli
-earthengine-api
 tensorflow
-folium
 tqdm
 loguru
+scikit-learn
