@@ -1,14 +1,14 @@
 from setuptools import setup, find_packages
 
 setup(
-    name='osm_ai_tools',
-    version='0.0',
+    name="osm_ai_tools",
+    version="0.0",
     packages=find_packages(),
     include_package_data=True,
     install_requires=[
-        'Click',
+        "Click",
     ],
-    entry_points='''
+    entry_points="""
         [console_scripts]
         download_images=osm_ai_tools.scripts.download_images:cli
         generate_bboxes=osm_ai_tools.scripts.generate_bboxes:cli
@@ -17,5 +17,5 @@ setup(
         generate_tfrecords=osm_ai_tools.scripts.generate_tfrecords:cli
         custom_location_data=osm_ai_tools.scripts.custom_location_data:cli
         data_pipeline=osm_ai_tools.scripts.data_pipeline:cli
-    ''',
+    """,
 )
