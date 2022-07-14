@@ -35,9 +35,9 @@ def download_image(
 
 
 def main(
-    location_file: str, image_dir: str, output_csv: str, image_size: int, zoom: int
+    input_csv: str, image_dir: str, output_csv: str, image_size: int, zoom: int
 ) -> None:
-    image_requests = pd.read_csv(location_file)
+    image_requests = pd.read_csv(input_csv)
     image_requests["zoom"] = zoom
     image_requests["size_x"] = image_size
     image_requests["size_y"] = image_size

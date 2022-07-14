@@ -3,6 +3,7 @@
   "gcs_bucket": "gs://osm-object-detector",
   "cluster_size": 0.008,
   "zoom": 17,
+  "image_download_size": 1280,
   "osm_tags": [
     {
       "tag_key": "man_made",

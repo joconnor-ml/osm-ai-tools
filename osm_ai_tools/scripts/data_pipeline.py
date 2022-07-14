@@ -53,6 +53,7 @@ def main(config_file):
         input_csv=clusters_path,
         image_dir=images_path,
         output_csv=image_metadata_path,
+        image_size=conf["image_download_size"],
         zoom=conf["zoom"],
     )
     generate_bboxes.main(
