@@ -9,14 +9,17 @@ import pandas as pd
     required=True,
     type=str,
 )
-@click.option("--output-csv", help="Path to output file", required=True, type=str)
 @click.option("--id-col", help="id column", required=True, type=str)
 @click.option("--lat-col", help="latitude column", default="lat", type=str)
 @click.option("--lon-col", help="longitude column", default="lon", type=str)
 @click.option(
-    "--object-size", "approx object span in lat/lon space", default=0.001, type=float
+    "--object-size",
+    help="approx object span in lat/lon space",
+    default=0.001,
+    type=float,
 )
 @click.option("--object-class", help="Name of object class", required=True, type=str)
+@click.option("--output-csv", help="Path to output file", required=True, type=str)
 def cli(input_csv, id_col, lat_col, lon_col, object_size, object_class, output_csv):
     df = pd.read_csv(input_csv)
     # renaming to object_id for compatibility
