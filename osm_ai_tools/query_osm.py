@@ -25,7 +25,8 @@ def get_geometry_info(nodes: List[overpy.Node]):
         "center_lon": (min(lons) + max(lons)) / 2,
     }
 
-def query_objects(query_list: List[ObjectQuery] = None, include_tags: bool=False):
+
+def query_objects(query_list: List[ObjectQuery] = None, include_tags: bool = False):
     api = overpy.Overpass()
 
     out = []
