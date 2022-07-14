@@ -15,6 +15,7 @@ from . import (
 def main(config_file):
     with open(config_file, "rt") as f:
         conf = json.load(f)
+    os.makedirs(conf["data_dir"], exist_ok=True)
     raw_locations_path = os.path.join(conf["data_dir"], "object_location_data.csv")
     clustered_locations_path = os.path.join(
         conf["data_dir"], "object_location_data_clustered.csv"
