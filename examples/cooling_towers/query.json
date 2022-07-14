@@ -1,4 +1,18 @@
-[
-  {"tag_key": "man_made", "tag_value": "cooling_tower", "object_class": "cooling_tower"},
-  {"tag_key": "tower:type", "tag_value": "cooling", "object_class": "cooling_tower"}
-]
+{
+  "data_dir": "data/cooling_towers",
+  "gcs_bucket": "gs://osm-object-detector",
+  "cluster_size": 0.008,
+  "zoom": 17,
+  "osm_tags": [
+    {
+      "tag_key": "man_made",
+      "tag_value": "cooling_tower",
+      "object_class": "cooling_tower"
+    },
+    {
+      "tag_key": "tower:type",
+      "tag_value": "cooling",
+      "object_class": "cooling_tower"
+    }
+  ]
+}
