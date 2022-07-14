@@ -8,3 +8,5 @@ tensorflow
 tqdm
 loguru
 scikit-learn
+fsspec
+gcsfs
