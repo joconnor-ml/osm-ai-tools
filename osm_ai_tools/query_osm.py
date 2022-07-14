@@ -40,7 +40,7 @@ def query_objects(query_list: List[ObjectQuery] = None, include_tags: bool = Fal
         result = api.query(q)
         df = []
         for w in result.ways:
-            out_dict = dict(osm_id=w.id, **get_geometry_info(w.get_nodes()))
+            out_dict = dict(object_id=w.id, **get_geometry_info(w.get_nodes()))
             if include_tags:
                 out_dict = {**out_dict, **w.tags}
             df.append(out_dict)

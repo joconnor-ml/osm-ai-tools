@@ -10,6 +10,7 @@ from . import (
     generate_tfrecords,
     download_images,
     cluster_objects,
+    custom_location_data,
 )
 
 
@@ -26,18 +27,42 @@ def main(config_file):
     bboxes_path = os.path.join(conf["data_dir"], "bboxes.csv")
     tfrecords_path = os.path.join(conf["data_dir"], "tfrecords")
 
-    generate_object_location_data.cli(conf, raw_locations_path, include_tags=True)
+    if conf["osm_tags"]:
+        generate_object_location_data.cli(
+            query_config=conf, output_csv=raw_locations_path, include_tags=True
+        )
+    elif conf["custom_locations"]:
+        custom_location_data.cli(
+            conf["custom_locations"],
+            id_col="gems_plant_id",
+            lat_col="lat",
+            lon_col="lon",
+            object_size=0.01,
+            object_class="power_plant",
+            output_csv=raw_locations_path,
+        )
     cluster_objects.cli(
-        raw_locations_path,
-        clusters_path,
-        clustered_locations_path,
+        input_objects=raw_locations_path,
+        output_clusters=clusters_path,
+        output_objects=clustered_locations_path,
         max_distance=conf["cluster_size"],
     )
     download_images.cli(
-        clusters_path, images_path, image_metadata_path, zoom=conf["zoom"]
+        input_csv=clusters_path,
+        image_dir=images_path,
+        output_csv=image_metadata_path,
+        zoom=conf["zoom"],
     )
-    generate_bboxes.cli(image_metadata_path, clustered_locations_path, bboxes_path)
-    generate_tfrecords.cli(images_path, bboxes_path, tfrecords_path)
+    generate_bboxes.cli(
+        input_image_csv=image_metadata_path,
+        input_object_csv=clustered_locations_path,
+        output_csv=bboxes_path,
+    )
+    generate_tfrecords.cli(
+        input_image_dir=images_path,
+        input_bbox_csv=bboxes_path,
+        output_tfrecord_path=tfrecords_path,
+    )
     if conf["gcs_bucket"]:
         subprocess.call(
             [

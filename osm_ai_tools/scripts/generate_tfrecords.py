@@ -5,6 +5,7 @@ import click
 
 AUTO = tf.data.experimental.AUTOTUNE  # used in tf.data.Dataset API
 IMAGE_SIZE = 224
+SHARD_SIZE = 512
 
 
 def get_base_dataset(image_dir, patches):
@@ -12,7 +13,7 @@ def get_base_dataset(image_dir, patches):
     patch_ids = []
     for image_id, grp in patches.groupby("image_id"):
         image_patches.append(grp[["y_min", "x_min", "y_max", "x_max"]].values)
-        patch_ids.append(grp["osm_id"].values)
+        patch_ids.append(grp["object_id"].values)
 
     def patch_gen():
         for coords in image_patches:
@@ -108,7 +109,7 @@ def generate_tfrecords(input_image_dir, input_bbox_csv, output_tfrecord_path):
         )
         return image, label, bbox_id
 
-    ds = final_dataset.map(recompress_image).batch(512)  # 512 image per shard
+    ds = final_dataset.map(recompress_image).batch(SHARD_SIZE)
 
     print("Writing TFRecords")
     for shard, (image, label, bbox_id) in enumerate(ds):

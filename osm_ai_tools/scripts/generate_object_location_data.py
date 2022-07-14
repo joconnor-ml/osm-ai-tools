@@ -17,7 +17,7 @@ def cli(query_config, output_csv, include_tags):
         conf = json.load(f)["osm_tags"]
     query_configs = [query_osm.ObjectQuery(**kwargs) for kwargs in conf]
     df = query_osm.query_objects(query_configs, include_tags).drop_duplicates(
-        subset=["osm_id"]
+        subset=["object_id"]
     )
     print(f"{df.shape[0]} usable results")
     df.to_csv(output_csv, index=False)

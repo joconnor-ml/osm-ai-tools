@@ -28,7 +28,7 @@ to reduce the number of image requests needed.
 - `generate_bboxes` generates normalised bounding boxes for each object, linking objects and images.
 - `generate_tfrecords` writes image and bbox data to sharded tfrecord files.
 
-## Image Classification for Tag Validation
+## Image Classification for OSM Tag Validation
 
 Raw OSM annotations are often inconsistent, outdated or wrong. In [mistag_classification.ipynb](example/cooling_towers/mistag_classification.ipynb)
 we use a cross-validated image classification pipeline to generate a list of likely

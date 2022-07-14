@@ -56,7 +56,7 @@ def get_patch(row, padding=0.06):
             y_max=(0.5 - (row.max_lat - row.center_lat_image) / size_lat) - padding,
             x_min=(0.5 + (row.min_lon - row.center_lon_image) / size_lon) - padding,
             x_max=(0.5 + (row.max_lon - row.center_lon_image) / size_lon) + padding,
-            osm_id=row.osm_id,
+            object_id=row.object_id,
         )
     )
 
@@ -88,6 +88,6 @@ def cli(input_image_csv, input_object_csv, output_csv):
     )
 
     bboxes = object_df.apply(get_patch, axis=1)
-    bboxes["osm_id"] = bboxes["osm_id"].astype(int)
+    bboxes["object_id"] = bboxes["object_id"].astype(int)
     bboxes["image_id"] = object_df["image_id"]
     bboxes.to_csv(output_csv, index=False)

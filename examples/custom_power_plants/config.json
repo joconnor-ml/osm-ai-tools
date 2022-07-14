@@ -1,0 +1,7 @@
+{
+  "data_dir": "data/power_plants",
+  "gcs_bucket": "gs://osm-object-detector",
+  "cluster_size": 0.01,
+  "zoom": 15,
+  "custom_locations": "gs://osm-object-detector/plant_attributes_coal.csv"
+}

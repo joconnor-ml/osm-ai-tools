@@ -14,15 +14,13 @@ import pandas as pd
 @click.option("--lat-col", help="latitude column", default="lat", type=str)
 @click.option("--lon-col", help="longitude column", default="lon", type=str)
 @click.option(
-    "--object-size", "apprrox object span in lat/lon space", default=0.001, type=float
+    "--object-size", "approx object span in lat/lon space", default=0.001, type=float
 )
-@click.option(
-    "--object-class", help="Path to output object location CSV", required=True, type=str
-)
-def cli(input_csv, id_col, lat_col, lon_col, object_size, object_class):
+@click.option("--object-class", help="Name of object class", required=True, type=str)
+def cli(input_csv, id_col, lat_col, lon_col, object_size, object_class, output_csv):
     df = pd.read_csv(input_csv)
-    # renaming to osm_id for compatibility
-    df["osm_id"] = df[id_col]
+    # renaming to object_id for compatibility
+    df["object_id"] = df[id_col]
     df["center_lat"] = df[lat_col]
     df["min_lat"] = df[lat_col] - object_size
     df["max_lat"] = df[lat_col] + object_size
@@ -32,7 +30,7 @@ def cli(input_csv, id_col, lat_col, lon_col, object_size, object_class):
     df["object_class"] = object_class
     df[
         [
-            "osm_id",
+            "object_id",
             "min_lat",
             "max_lat",
             "min_lon",
@@ -41,4 +39,4 @@ def cli(input_csv, id_col, lat_col, lon_col, object_size, object_class):
             "center_lon",
             "object_class",
         ]
-    ].to_csv(input_csv)
+    ].to_csv(output_csv)
