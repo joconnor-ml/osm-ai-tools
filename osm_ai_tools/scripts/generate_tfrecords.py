@@ -33,7 +33,9 @@ def get_base_dataset(image_dir, patches):
 
     i = 0
     for i, ex in enumerate(images):
-        continue
+        print(i)
+        print(filename_dataset[i])
+        print(ex)
     print(i)
     for i, ex in enumerate(bboxes):
         continue
