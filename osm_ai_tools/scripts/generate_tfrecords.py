@@ -73,6 +73,12 @@ def get_final_dataset(images_and_bboxes, bboxes_per_image):
     # use `repeat` to balance the data
     negatives = images_and_bboxes.repeat(round(bboxes_per_image)).map(sample_negatives)
     final_dataset = tf.data.experimental.sample_from_datasets([positives, negatives])
+
+    for i, _ in enumerate(positives.take(-1)):
+        print("pos", i)
+    for i, _ in enumerate(negatives.take(-1)):
+        print("neg", i)
+
     return final_dataset
 
 
