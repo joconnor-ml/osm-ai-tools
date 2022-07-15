@@ -126,10 +126,8 @@ def main(input_image_dir, input_bbox_csv, output_tfrecord_path):
         # good practice to have the number of records in the filename
         filename = output_tfrecord_path + "{:02d}-{}.tfrec".format(shard, shard_size)
 
-        print(shard_size)
         with tf.io.TFRecordWriter(filename) as out_file:
             for i in range(shard_size):
-                print(image.numpy()[i])
                 example = to_tfrecord(
                     image.numpy()[i],  # re-compressed image: already a byte string
                     label.numpy()[i],
