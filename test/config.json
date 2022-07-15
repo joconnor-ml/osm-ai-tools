@@ -1,0 +1,12 @@
+{
+  "data_dir": "data/test",
+  "cluster_size": 0.01,
+  "zoom": 16,
+  "image_download_size": 1280,
+  "custom_locations": {
+    "file": "test/locations.csv",
+    "id_col": "id",
+    "lat_col": "lat",
+    "lon_col": "lon"
+  }
+}

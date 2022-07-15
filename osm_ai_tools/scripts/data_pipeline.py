@@ -35,12 +35,12 @@ def main(config_file):
         )
     elif "custom_locations" in conf:
         custom_location_data.main(
-            conf["custom_locations"],
-            id_col="gems_plant_id",
-            lat_col="lat",
-            lon_col="lon",
-            object_size=0.01,
-            object_class="power_plant",
+            conf["custom_locations"]["file"],
+            id_col=conf["custom_locations"]["id_col"],
+            lat_col=conf["custom_locations"]["lat_col"],
+            lon_col=conf["custom_locations"]["lon_col"],
+            object_size=conf["cluster_size"],
+            object_class=conf["object_class"],
             output_csv=raw_locations_path,
         )
     else:

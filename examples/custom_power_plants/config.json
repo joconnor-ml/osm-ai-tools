@@ -4,5 +4,11 @@
   "cluster_size": 0.01,
   "zoom": 15,
   "image_download_size": 1280,
-  "custom_locations": "gs://osm-object-detector/plant_attributes_coal.csv"
+  "custom_locations": {
+    "file": "gs://osm-object-detector/plant_attributes_coal.csv",
+    "id_col": "gems_plant_id",
+    "lat_col": "lat",
+    "lon_col": "lon"
+  },
+  "object_class": "custom_power_plant"
 }
