@@ -1,6 +1,8 @@
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+from loguru import logger
+
 from osm_ai_tools import config
 
 AUTO = tf.data.experimental.AUTOTUNE  # used in tf.data.Dataset API
@@ -21,9 +23,10 @@ def get_base_dataset(image_dir, patches):
         for i in patch_ids:
             yield i
 
-    filename_dataset = tf.data.Dataset.from_tensor_slices(
-        image_dir + "/" + patches["image_id"].unique() + ".png"
-    )
+    image_paths = image_dir + "/" + patches["image_id"].unique() + ".png"
+    logger.debug(f"Fist image path: {image_paths[0]}")
+
+    filename_dataset = tf.data.Dataset.from_tensor_slices(image_paths)
     images = filename_dataset.map(lambda x: tf.io.decode_png(tf.io.read_file(x)))
     bboxes = tf.data.Dataset.from_generator(patch_gen, output_types=tf.float32)
     bbox_ids = tf.data.Dataset.from_generator(patch_id_gen, output_types=tf.int32)
@@ -55,7 +58,10 @@ def get_final_dataset(images_and_bboxes, bboxes_per_image):
     def sample_negatives(img, boxes, cls):
         return {
             "image": tf.cast(
-                tf.image.random_crop(img, size=[config.image_size, config.image_size, 3]), np.float32
+                tf.image.random_crop(
+                    img, size=[config.image_size, config.image_size, 3]
+                ),
+                np.float32,
             ),
             "bbox_id": -1,
             "label": 0,
@@ -96,6 +102,9 @@ def main(input_image_dir, input_bbox_csv, output_tfrecord_path):
     # for balancing positives and negatives:
     bboxes_per_image = patches.shape[0] / patches["image_id"].nunique()
 
+    logger.debug(
+        f"{patches['image_id'].nunique()} images containing {patches.shape[0]} objects"
+    )
     final_dataset = get_final_dataset(images_and_bboxes, bboxes_per_image)
 
     def recompress_image(row):

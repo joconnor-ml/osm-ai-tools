@@ -10,5 +10,5 @@
     "lat_col": "lat",
     "lon_col": "lon"
   },
-  "object_class": "custom_power_plant"
+  "object_class": "power_plant"
 }
