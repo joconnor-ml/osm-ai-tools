@@ -55,13 +55,7 @@ def get_final_dataset(images_and_bboxes, bboxes_per_image):
     def sample_negatives(img, boxes, cls):
         return {
             "image": tf.cast(
-                tf.image.crop_to_bounding_box(
-                    image=img,
-                    offset_height=0,
-                    offset_width=0,
-                    target_height=config.image_size,
-                    target_width=config.image_size
-                ), np.float32
+                tf.image.random_crop(img, size=[config.image_size, config.image_size, 3]), np.float32
             ),
             "bbox_id": -1,
             "label": 0,
