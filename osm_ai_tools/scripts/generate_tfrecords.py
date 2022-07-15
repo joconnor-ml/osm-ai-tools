@@ -24,7 +24,7 @@ def get_base_dataset(image_dir, patches):
             yield i
 
     image_paths = image_dir + "/" + patches["image_id"].unique() + ".png"
-    logger.debug(f"Fist image path: {image_paths[0]}")
+    logger.debug(f"Fist image paths: {image_paths[:20]}")
 
     filename_dataset = tf.data.Dataset.from_tensor_slices(image_paths)
     images = filename_dataset.map(lambda x: tf.io.decode_png(tf.io.read_file(x)))
