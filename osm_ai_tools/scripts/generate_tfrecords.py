@@ -120,6 +120,7 @@ def main(input_image_dir, input_bbox_csv, output_tfrecord_path):
     ds = final_dataset.map(recompress_image)
     for ex in ds.take(1):
         logger.debug(str(ex)[:80])
+    logger.debug(f"{sum(1 for _ in ds.take(-1))}")
     ds = ds.batch(config.shard_size)
     for ex in ds.take(1):
         logger.debug(str(ex)[:80])
