@@ -1,9 +1,9 @@
-name: Lint
+name: Test
 
-on: [push, pull_request]
+on: [pull_request]
 
 jobs:
-  lint:
+  test:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
