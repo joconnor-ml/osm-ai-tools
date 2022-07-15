@@ -23,9 +23,10 @@ def get_base_dataset(image_dir, patches):
         for i in patch_ids:
             yield i
 
-    filename_dataset = tf.data.Dataset.from_tensor_slices(
-        image_dir + "/" + patches["image_id"].unique() + ".png"
-    )
+    image_paths = image_dir + "/" + patches["image_id"].unique() + ".png"
+    logger.debug(f"{image_paths.sample(3)}")
+
+    filename_dataset = tf.data.Dataset.from_tensor_slices(image_paths)
     images = filename_dataset.map(lambda x: tf.io.decode_png(tf.io.read_file(x)))
     bboxes = tf.data.Dataset.from_generator(patch_gen, output_types=tf.float32)
     bbox_ids = tf.data.Dataset.from_generator(patch_id_gen, output_types=tf.int32)
