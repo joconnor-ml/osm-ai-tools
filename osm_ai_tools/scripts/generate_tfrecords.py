@@ -32,9 +32,13 @@ def get_base_dataset(image_dir, patches):
     bbox_ids = tf.data.Dataset.from_generator(patch_id_gen, output_types=tf.int32)
 
     i = 0
+    for i, ex in enumerate(filename_dataset):
+        continue
+    print(i)
+
     for i, ex in enumerate(images):
         print(i)
-        print(filename_dataset[i])
+        print(image_paths[i])
         print(ex)
     print(i)
     for i, ex in enumerate(bboxes):
