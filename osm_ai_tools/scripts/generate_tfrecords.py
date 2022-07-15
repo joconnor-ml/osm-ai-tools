@@ -120,7 +120,7 @@ def main(input_image_dir, input_bbox_csv, output_tfrecord_path):
     ds = final_dataset.map(recompress_image).batch(config.shard_size)
 
     print("Writing TFRecords")
-    for shard, (image, label, bbox_id) in enumerate(ds):
+    for shard, (image, label, bbox_id) in enumerate(ds.take(-1)):
         # batch size used as shard size here
         shard_size = image.numpy().shape[0]
         # good practice to have the number of records in the filename
