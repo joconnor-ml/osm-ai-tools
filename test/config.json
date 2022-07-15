@@ -8,5 +8,6 @@
     "id_col": "id",
     "lat_col": "lat",
     "lon_col": "lon"
-  }
+  },
+  "object_class": "stonehenge"
 }

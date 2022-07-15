@@ -4,7 +4,7 @@ black
 overpy
 pandas
 mapboxcli
-tensorflow
+tensorflow==2.8
 tqdm
 loguru
 scikit-learn
