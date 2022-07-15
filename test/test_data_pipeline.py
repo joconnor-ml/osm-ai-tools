@@ -5,6 +5,7 @@ import os
 
 CONFIG_FILE = os.path.join(os.path.dirname(__file__), "config.json")
 
+
 class TestPipeline(unittest.TestCase):
     def test_pipeline(self):
         data_pipeline.main(CONFIG_FILE)
