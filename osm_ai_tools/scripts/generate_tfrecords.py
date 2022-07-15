@@ -105,6 +105,8 @@ def main(input_image_dir, input_bbox_csv, output_tfrecord_path):
     patches = pd.read_csv(input_bbox_csv)
 
     images_and_bboxes = get_base_dataset(input_image_dir, patches)
+    for i, ex in enumerate(images_and_bboxes.take(-1)):
+        print(i, ex["bbox_id"])
     # for balancing positives and negatives:
     bboxes_per_image = patches.shape[0] / patches["image_id"].nunique()
 
