@@ -30,6 +30,17 @@ def get_base_dataset(image_dir, patches):
     images = filename_dataset.map(lambda x: tf.io.decode_png(tf.io.read_file(x)))
     bboxes = tf.data.Dataset.from_generator(patch_gen, output_types=tf.float32)
     bbox_ids = tf.data.Dataset.from_generator(patch_id_gen, output_types=tf.int32)
+
+    i = 0
+    for i, ex in enumerate(images):
+        continue
+    print(i)
+    for i, ex in enumerate(bboxes):
+        continue
+    print(i)
+    for i, ex in enumerate(bbox_ids):
+        continue
+    print(i)
     return tf.data.Dataset.zip((images, bboxes, bbox_ids))
 
 
