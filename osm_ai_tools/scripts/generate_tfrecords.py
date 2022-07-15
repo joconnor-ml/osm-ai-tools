@@ -117,7 +117,8 @@ def main(input_image_dir, input_bbox_csv, output_tfrecord_path):
         )
         return image, label, bbox_id
 
-    logger.debug(f"{sum(1 for _ in final_dataset.take(-1))}")
+    for i, _ in enumerate(final_dataset.take(-1)):
+        print(i)
 
     ds = final_dataset.map(recompress_image)
     logger.debug(f"{sum(1 for _ in ds.take(-1))}")
