@@ -13,8 +13,11 @@ def get_image_id(lat: float, lon: float, zoom: int, size_x: int, size_y: int) ->
 
 
 def image_readable(path):
-    tf.io.decode_png(tf.io.read_file(path))
-    return True
+    try:
+        tf.io.decode_png(tf.io.read_file(path))
+        return True
+    except tf.python.framework.errors_impl.InvalidArgumentError:
+        return False
 
 
 @backoff.on_exception(backoff.expo, (sp.CalledProcessError, RuntimeError), max_tries=3)
