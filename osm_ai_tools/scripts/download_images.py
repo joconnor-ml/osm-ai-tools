@@ -11,9 +11,7 @@ def get_image_id(lat: float, lon: float, zoom: int, size_x: int, size_y: int) ->
     return f"lat_{lat:.5f}_lon_{lon:.5f}_zoom_{zoom}_{size_x}x{size_y}"
 
 
-@backoff.on_exception(backoff.expo,
-                      (sp.CalledProcessError, RuntimeError),
-                      max_tries=3)
+@backoff.on_exception(backoff.expo, (sp.CalledProcessError, RuntimeError), max_tries=3)
 def download_image(
     lat: float, lon: float, zoom: int, size_x: int, size_y: int, filename: str
 ) -> None:
