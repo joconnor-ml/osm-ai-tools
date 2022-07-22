@@ -120,10 +120,7 @@ def main(input_image_dir, input_bbox_csv, output_tfrecord_path):
         return image, label, bbox_id
 
     ds = final_dataset.map(recompress_image)
-    logger.debug(f"{sum(1 for _ in ds.take(-1))}")
     ds = ds.batch(config.shard_size)
-    for ex in ds.take(1):
-        logger.debug(str(ex)[:80])
 
     print("Writing TFRecords")
     for shard, (image, label, bbox_id) in enumerate(ds.take(-1)):
