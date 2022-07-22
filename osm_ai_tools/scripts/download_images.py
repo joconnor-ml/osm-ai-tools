@@ -1,8 +1,9 @@
 import os
 import subprocess as sp
-import backoff
 
+import backoff
 import pandas as pd
+import tensorflow as tf
 from loguru import logger
 from tqdm import tqdm
 
@@ -11,11 +12,16 @@ def get_image_id(lat: float, lon: float, zoom: int, size_x: int, size_y: int) ->
     return f"lat_{lat:.5f}_lon_{lon:.5f}_zoom_{zoom}_{size_x}x{size_y}"
 
 
+def image_readable(path):
+    tf.io.decode_png(tf.io.read_file(path))
+    return True
+
+
 @backoff.on_exception(backoff.expo, (sp.CalledProcessError, RuntimeError), max_tries=3)
 def download_image(
     lat: float, lon: float, zoom: int, size_x: int, size_y: int, filename: str
 ) -> None:
-    if os.path.exists(filename) and os.path.getsize(filename) > 0:
+    if image_readable(filename):
         logger.debug(f"file {filename} exists: skipping")
         return
     call = [
@@ -35,7 +41,7 @@ def download_image(
     ]
     sp.check_call(call)  # throws if call fails
     # mapbox can silently fail and return a size-zero image. Check for this
-    if not os.path.exists(filename) or os.path.getsize(filename) == 0:
+    if not image_readable(filename):
         raise RuntimeError("image download failed")
 
 
