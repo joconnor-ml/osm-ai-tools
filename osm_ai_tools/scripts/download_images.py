@@ -21,7 +21,7 @@ def image_readable(path):
 def download_image(
     lat: float, lon: float, zoom: int, size_x: int, size_y: int, filename: str
 ) -> None:
-    if image_readable(filename):
+    if os.path.exists(filename):
         logger.debug(f"file {filename} exists: skipping")
         return
     call = [
