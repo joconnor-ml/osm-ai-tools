@@ -61,7 +61,7 @@ def get_patch(row, padding=0.06):
 
 
 def main(input_image_csv, input_object_csv, output_csv):
-    image_df = pd.read_csv(input_image_csv)
+    image_df = pd.read_csv(input_image_csv).query("image_downloaded==True")
     image_df["image_id"] = image_df.apply(
         lambda row: download_images.get_image_id(
             row.center_lat, row.center_lon, row.zoom, row.size_x, row.size_y

@@ -57,7 +57,7 @@ def main(
         )
         filename = os.path.join(image_dir, f"{image_id}.png")
         try:
-            status = download_image(
+            download_image(
                 row.center_lat,
                 row.center_lon,
                 row.zoom,
@@ -65,8 +65,7 @@ def main(
                 row.size_y,
                 filename,
             )
-            # TODO retry + backoff if we downloaded a size-zero image
-            image_status.append(status)
+            image_status.append(True)
         except Exception as e:
             logger.exception(e)
             # note down failure
