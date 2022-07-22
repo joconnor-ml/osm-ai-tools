@@ -31,22 +31,6 @@ def get_base_dataset(image_dir, patches):
     bboxes = tf.data.Dataset.from_generator(patch_gen, output_types=tf.float32)
     bbox_ids = tf.data.Dataset.from_generator(patch_id_gen, output_types=tf.int32)
 
-    i = 0
-    for i, ex in enumerate(filename_dataset):
-        continue
-    print(i)
-
-    for i, ex in enumerate(images):
-        print(i)
-        print(image_paths[i])
-        print(ex)
-    print(i)
-    for i, ex in enumerate(bboxes):
-        continue
-    print(i)
-    for i, ex in enumerate(bbox_ids):
-        continue
-    print(i)
     return tf.data.Dataset.zip((images, bboxes, bbox_ids))
 
 
@@ -91,11 +75,6 @@ def get_final_dataset(images_and_bboxes, bboxes_per_image):
     negatives = images_and_bboxes.repeat(round(bboxes_per_image)).map(sample_negatives)
     final_dataset = tf.data.experimental.sample_from_datasets([positives, negatives])
 
-    for i, _ in enumerate(positives.take(-1)):
-        print("pos", i)
-    for i, _ in enumerate(negatives.take(-1)):
-        print("neg", i)
-
     return final_dataset
 
 
@@ -122,8 +101,6 @@ def main(input_image_dir, input_bbox_csv, output_tfrecord_path):
     patches = pd.read_csv(input_bbox_csv)
 
     images_and_bboxes = get_base_dataset(input_image_dir, patches)
-    for i, (a, b, c) in enumerate(images_and_bboxes.take(-1)):
-        print(i, c)
     # for balancing positives and negatives:
     bboxes_per_image = patches.shape[0] / patches["image_id"].nunique()
 
@@ -141,9 +118,6 @@ def main(input_image_dir, input_bbox_csv, output_tfrecord_path):
             image, optimize_size=True, chroma_downsampling=False
         )
         return image, label, bbox_id
-
-    for i, _ in enumerate(final_dataset.take(-1)):
-        print(i)
 
     ds = final_dataset.map(recompress_image)
     logger.debug(f"{sum(1 for _ in ds.take(-1))}")
