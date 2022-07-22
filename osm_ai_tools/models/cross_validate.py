@@ -2,6 +2,7 @@ import numpy as np
 import pandas as pd
 import tensorflow as tf
 from osm_ai_tools import config
+import math
 
 AUTO = tf.data.experimental.AUTOTUNE  # used in tf.data.Dataset API
 BATCH_SIZE = 128
@@ -146,3 +147,12 @@ def main(output_dir):
         pred_dfs.append(get_pred_df(model, val_ds))
 
     pd.concat(pred_dfs).to_csv(output_dir)
+
+
+if __name__ == "__main__":
+    import argparse
+
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--config", type=str, help="Path to JSON config file")
+    args = parser.parse_args()
+    main(args.config)
