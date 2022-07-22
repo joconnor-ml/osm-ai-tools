@@ -1,5 +1,6 @@
 -e .
 argparse
+backoff
 black
 overpy
 pandas

@@ -1,5 +1,6 @@
 import os
 import subprocess as sp
+import backoff
 
 import pandas as pd
 from loguru import logger
@@ -10,10 +11,13 @@ def get_image_id(lat: float, lon: float, zoom: int, size_x: int, size_y: int) ->
     return f"lat_{lat:.5f}_lon_{lon:.5f}_zoom_{zoom}_{size_x}x{size_y}"
 
 
+@backoff.on_exception(backoff.expo,
+                      (sp.CalledProcessError, RuntimeError),
+                      max_tries=3)
 def download_image(
     lat: float, lon: float, zoom: int, size_x: int, size_y: int, filename: str
 ) -> None:
-    if os.path.exists(filename):
+    if os.path.exists(filename) and os.path.getsize(filename) > 0:
         logger.debug(f"file {filename} exists: skipping")
         return
     call = [
@@ -32,6 +36,9 @@ def download_image(
         filename,
     ]
     sp.check_call(call)  # throws if call fails
+    # mapbox can silently fail and return a size-zero image. Check for this
+    if not os.path.exists(filename) or os.path.getsize(filename) == 0:
+        raise RuntimeError("image download failed")
 
 
 def main(
@@ -52,7 +59,7 @@ def main(
         )
         filename = os.path.join(image_dir, f"{image_id}.png")
         try:
-            download_image(
+            status = download_image(
                 row.center_lat,
                 row.center_lon,
                 row.zoom,
@@ -60,7 +67,8 @@ def main(
                 row.size_y,
                 filename,
             )
-            image_status.append(True)
+            # TODO retry + backoff if we downloaded a size-zero image
+            image_status.append(status)
         except Exception as e:
             logger.exception(e)
             # note down failure
