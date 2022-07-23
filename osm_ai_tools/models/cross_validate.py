@@ -100,7 +100,9 @@ def main(output_dir):
     option_no_order.experimental_deterministic = False
 
     filenames = tf.io.gfile.glob(config.tfrecord_prefix + "*.tfrec")
-    logger.debug(f"{len(filenames)} tfrecord files found in path {config.tfrecord_prefix}*.tfrec")
+    logger.debug(
+        f"{len(filenames)} tfrecord files found in path {config.tfrecord_prefix}*.tfrec"
+    )
     # split folds at this stage for quicker loading.
 
     # split by taking every 'i'th file for i in num folds, i.e. [1, 2, 3, 1, 2, 3] etc.
@@ -132,8 +134,8 @@ def main(output_dir):
 
     pred_dfs = []
     for i in range(config.num_folds):
-        train_files = np.roll(fold_files, i)[: config.train_folds]
-        val_files = np.roll(fold_files, i)[config.train_folds :]
+        train_files = np.roll(fold_files, i, axis=0)[: config.train_folds]
+        val_files = np.roll(fold_files, i, axis=0)[config.train_folds :]
         train_ds = tf_dataset_from_files(train_files)
         val_ds = tf_dataset_from_files(val_files)
 
