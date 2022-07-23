@@ -1,8 +1,11 @@
+import math
+
 import numpy as np
 import pandas as pd
 import tensorflow as tf
+from loguru import logger
+
 from osm_ai_tools import config
-import math
 
 AUTO = tf.data.experimental.AUTOTUNE  # used in tf.data.Dataset API
 BATCH_SIZE = 128
@@ -97,6 +100,7 @@ def main(output_dir):
     option_no_order.experimental_deterministic = False
 
     filenames = tf.io.gfile.glob(config.tfrecord_prefix + "*.tfrec")
+    logger.debug(f"{len(filenames)} tfrecord files found in path {config.tfrecord_prefix}*.tfrec")
     # split folds at this stage for quicker loading.
 
     # split by taking every 'i'th file for i in num folds, i.e. [1, 2, 3, 1, 2, 3] etc.
