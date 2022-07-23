@@ -62,7 +62,7 @@ def read_tfrecord(example):
     # VarLenFeature fields require additional sparse_to_dense decoding
 
     image = tf.image.decode_jpeg(example["image"], channels=3)
-    image = tf.reshape(image, [config.image_size, config.shard_size, 3])
+    image = tf.reshape(image, [config.image_size, config.image_size, 3])
     image = tf.cast(image, tf.float32)
 
     return {"image": image, "label": example["label"], "bbox_id": example["bbox_id"]}
