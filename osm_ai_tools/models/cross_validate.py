@@ -106,9 +106,9 @@ def main(output_dir):
     # split folds at this stage for quicker loading.
 
     # split by taking every 'i'th file for i in num folds, i.e. [1, 2, 3, 1, 2, 3] etc.
-    fold_files = np.array([
-        filenames[i :: config.num_folds] for i in range(config.num_folds)
-    ])
+    fold_files = np.array(
+        [filenames[i :: config.num_folds] for i in range(config.num_folds)]
+    )
 
     def tf_dataset_from_files(filenames):
         ds = tf.data.TFRecordDataset(filenames, num_parallel_reads=AUTO)
