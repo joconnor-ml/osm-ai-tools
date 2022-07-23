@@ -91,7 +91,7 @@ def augment(image_batch, label_batch):
     return augmentor.call(image_batch), label_batch
 
 
-def main(output_dir):
+def main(tfrecord_prefix, output_dir):
     # read from TFRecords. For optimal performance, read from multiple
     # TFRecord files at once and set the option experimental_deterministic = False
     # to allow order-altering optimizations.
@@ -99,9 +99,9 @@ def main(output_dir):
     option_no_order = tf.data.Options()
     option_no_order.experimental_deterministic = False
 
-    filenames = tf.io.gfile.glob(config.tfrecord_prefix + "*.tfrec")
+    filenames = tf.io.gfile.glob(tfrecord_prefix + "*.tfrec")
     logger.debug(
-        f"{len(filenames)} tfrecord files found in path {config.tfrecord_prefix}*.tfrec"
+        f"{len(filenames)} tfrecord files found in path {tfrecord_prefix}*.tfrec"
     )
     # split folds at this stage for quicker loading.
 
